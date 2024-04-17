@@ -10,20 +10,7 @@ export class Floor {
     this.floorDiv = this.createFloorElement();
     this.floorBtn = this.createFloorBtnElement();
     this.timerDiv = this.createTimerDivElement();
-
-    this.floorBtn.addEventListener("click", this.onClick);
   }
-
-  onClick = () => {
-    if (!this.isPressed) {
-      const event = new CustomEvent("floorClicked", {
-        detail: this,
-      });
-      document.dispatchEvent(event);
-      this.floorBtn.classList.add("clicked");
-      this.isPressed = true;
-    }
-  };
 
   createFloorElement = (): HTMLDivElement => {
     const floor = document.createElement("div");

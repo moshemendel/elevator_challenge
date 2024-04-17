@@ -13,8 +13,8 @@ export function buildingsFactory(numBuildings: number) {
   if (!container) return;
 
   for (let i = 0; i < numBuildings; i++) {
-    const building = new Building(FLOORS);
-    container.appendChild(building.BuildingDivElement);
+    const building = new Building(FLOORS, ELEVATORS);
+    container.appendChild(building.buildingDivElement);
     floorsFactory(building, FLOORS); // Generate 10 floors for each building
     elevatorFactory(building, ELEVATORS); // Generate 2 elevators for each building
   }
@@ -24,6 +24,12 @@ export function buildingsFactory(numBuildings: number) {
 function floorsFactory(building: Building, numFloors: number) {
   for (let i = numFloors; i >= 0; i--) {
     const floor = new Floor(i);
+    const floorBtn = floor.floorBtn;
+    if (floorBtn) {
+      floorBtn.addEventListener("click", () => {
+        building.handleClick(floor);
+      });
+    }
     // building.floors.push(floor);
     building.floorsDivElement.appendChild(floor.floorDiv);
   }
@@ -34,6 +40,6 @@ function elevatorFactory(building: Building, numElevators: number) {
   for (let i = 1; i <= numElevators; i++) {
     const elevator = new Elevator(FLOORS);
     building.elevators.push(elevator);
-    building.ElevatorsDivElement.appendChild(elevator.elvDiv);
+    building.elevatorsDivElement.appendChild(elevator.elvDiv);
   }
 }
