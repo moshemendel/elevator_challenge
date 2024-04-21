@@ -29,7 +29,8 @@ export class Floor {
 
   createTimerDivElement = () => {
     const timer = document.createElement("div");
-    timer.textContent = String("00:00");
+    // timer.textContent = String("00:00");
+    timer.textContent = String("00");
     timer.classList.add("metal", "timer");
     this.floorDiv.appendChild(timer);
     return timer;

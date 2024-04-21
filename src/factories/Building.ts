@@ -1,6 +1,11 @@
 import { Elevator } from "./Elevator";
 import { Floor } from "./Floor";
 
+interface Timer {
+  sec: number;
+  ms: number;
+}
+
 export class Building {
   buildingDivElement: HTMLDivElement;
   floorsDivElement: HTMLDivElement;
@@ -21,9 +26,7 @@ export class Building {
 
   handleClick = (floor: Floor) => {
     if (!floor.isPressed) {
-      floor.isPressed = true;
       this.updateFloorBtn(floor);
-      console.log("handle floor: " + floor.floorNumber);
       this.requestStack.push(floor);
     }
   };
@@ -32,7 +35,7 @@ export class Building {
     const intervalId = setInterval(() => {
       if (
         this.requestStack.length > 0 &&
-        this.elevators.some((e) => e.isAvailable)
+        this.elevators.some((elevator) => elevator.isAvailable)
       ) {
         const floor = this.requestStack.shift() as Floor;
         console.log(`Request stack: handling floor ${floor.floorNumber}`);
@@ -45,11 +48,14 @@ export class Building {
     const elvNum = this.getClosestElv(floor.floorDiv.offsetTop);
     const elevator = this.elevators[elvNum];
     elevator.setAvailable();
-    this.updateElvPos(floor, elevator);
+    const time = Math.abs(floor.floorNumber - elevator.atFloor) / 2;
+    console.log(`timer for elevator to arrive: ${time} seconds`);
+    this.updateElvPos(floor, elevator, time);
   };
 
   updateFloorBtn = (floor: Floor) => {
     floor.floorBtn.classList.toggle("clicked");
+    floor.isPressed = !floor.isPressed;
   };
 
   getClosestElv = (pos: number) => {
@@ -67,22 +73,50 @@ export class Building {
     return closestElv;
   };
 
-  updateElvPos = (floor: Floor, elevator: Elevator) => {
+  convertTime = (n: number): Timer => {
+    if (Number.isInteger(n)) {
+      return { sec: n, ms: 0 };
+    } else {
+      return { sec: Math.floor(n), ms: 30 };
+    }
+  };
+
+  updateElvPos = (floor: Floor, elevator: Elevator, time: number) => {
     const floorPos = floor.floorDiv.offsetTop;
     let elevatorPos = elevator.elvImg.offsetTop;
-
+    // let { sec, ms } = this.convertTime(time);
+    time = Math.ceil(time)
+    floor.timerDiv.textContent = `${time.toString().padStart(2, "0")}`
+    const timerId = setInterval(() => {
+      time--
+      // ms--;
+      // if (ms === 0) {
+      //   sec--;
+      //   ms = 60;
+      // }
+      // const formattedSec = sec.toString().padStart(2, "0");
+      // const formattedMs = ms.toString().padStart(2, "0").slice(0, 2);
+      // floor.timerDiv.textContent = `${formattedSec}:${formattedMs}`;
+      floor.timerDiv.textContent = `${time.toString().padStart(2, "0")}`
+    }, 1400);
     const id = setInterval(() => {
       if (floorPos === elevatorPos) {
         clearInterval(id);
-        this.updateFloorBtn(floor);
+        // floor.timerDiv.textContent = `00:00`
+        clearInterval(timerId);
         this.playSound();
+        elevator.atFloor = floor.floorNumber;
+        this.updateFloorBtn(floor);
+        floor.timerDiv.textContent = '00'
         setTimeout(() => {
           elevator.setAvailable();
-          floor.isPressed = false;
         }, 2000);
       } else {
-        if (elevatorPos > floorPos) elevatorPos--;
-        else elevatorPos++;
+        if (elevatorPos > floorPos) {
+          elevatorPos--;
+        } else {
+          elevatorPos++
+        };
         elevator.elvImg.style.top = `${elevatorPos}px`;
       }
     }, 4); // this interval will move the elvator at time of one second between two floors

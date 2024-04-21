@@ -2,6 +2,7 @@ export class Elevator {
   elvDiv: HTMLDivElement;
   elvImg: HTMLImageElement;
   isAvailable: boolean
+  atFloor: number = 0
 
   constructor(floorsCount: number) {
     this.elvDiv = this.createElevatorDiv();
