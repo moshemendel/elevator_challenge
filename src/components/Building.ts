@@ -31,14 +31,12 @@ export class Building {
     return div;
   }
 
-  getBuildingFirstFloorTop(): number {
+  getBuildingFirstElementBottom(element: string): number {
     let Top: number = 0;
-    const elements = document.getElementsByClassName("floor");
+    const elements = document.getElementsByClassName(element);
     if (elements.length > 0) {
       const lastElement = elements[elements.length - 1];
-      console.log(lastElement);
-      // console.log(Math.floor(lastElement.getBoundingClientRect().height));
-      Top = Math.floor(lastElement.getBoundingClientRect().top);
+      Top = Math.floor(lastElement.getBoundingClientRect().bottom);
     }
     return Top;
   }

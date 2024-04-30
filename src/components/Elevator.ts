@@ -2,12 +2,12 @@ export class Elevator {
   elvDiv: HTMLDivElement;
   elvImg: HTMLImageElement;
   isAvailable: boolean;
-  floorPixels: number = 118;
+  floorPixels: number = 116;
   atFloor: number = 0;
 
   constructor(floorsCount: number) {
     this.elvDiv = this.createElevatorDiv();
-    this.elvImg = this.createElevatorImg(`${floorsCount * this.floorPixels}px`);
+    this.elvImg = this.createElevatorImg(`${floorsCount - this.floorPixels}px`);
     this.isAvailable = true;
   }
 

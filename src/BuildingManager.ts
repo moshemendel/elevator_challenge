@@ -9,23 +9,11 @@ export class BuildingManager {
   requestStack: Floor[] = [];
   reqInProgress: boolean = false;
   dingSound: string = "ding.mp3";
-  floorPixels: number = 118;
-  headerPixels: number = 0;
 
   constructor(building: Building) {
     this.buildings = building;
-    this.getHeaderPixels();
     this.stackManager();
   }
-  
-  getHeaderPixels = () => {
-    const element = document.getElementById("header");
-    if (element){
-      this.headerPixels = element.offsetWidth
-      console.log("Width: " + element?.offsetWidth + "px");
-      console.log("Height: " + element?.offsetHeight + "px");
-    }
-  };
 
   handleClick = (floor: Floor) => {
     if (!floor.isPressed) {
@@ -35,7 +23,7 @@ export class BuildingManager {
   };
 
   stackManager = () => {
-    const intervalId = setInterval(() => {
+    setInterval(() => {
       if (
         this.requestStack.length > 0 &&
         this.elevators.some((elevator) => elevator.isAvailable)
@@ -44,7 +32,7 @@ export class BuildingManager {
         console.log(`Request stack: handling floor ${floor.floorNumber}`);
         this.processRequest(floor);
       }
-    }, 100);
+    }, 10);
   };
 
   processRequest = (floor: Floor) => {
@@ -75,24 +63,17 @@ export class BuildingManager {
     return closestElv;
   };
 
-  convertTime = (n: number): Timer => {
-    if (Number.isInteger(n)) {
-      return { sec: n, ms: 0 };
-    } else {
-      return { sec: Math.floor(n), ms: 30 };
-    }
-  };
-
   updateElvPos = (floor: Floor, elevator: Elevator, time: number) => {
     const floorPos = floor.floorDiv.offsetTop;
     let elevatorPos = elevator.elvImg.offsetTop;
-    time = Math.ceil(time);
+    time = Math.floor(time);
     floor.timerDiv.textContent = `${time.toString().padStart(2, "0")}`;
     const timerId = setInterval(() => {
       time--;
       floor.timerDiv.textContent = `${time.toString().padStart(2, "0")}`;
-    }, 1400);
+    }, 1000);
     const id = setInterval(() => {
+      console.log("floorTop:", floorPos, "elevatorTop:", elevatorPos);
       if (floorPos === elevatorPos) {
         clearInterval(id);
         clearInterval(timerId);

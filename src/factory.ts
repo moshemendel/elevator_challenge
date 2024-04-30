@@ -17,22 +17,18 @@ export function buildingsFactory(buildings: BT[]) {
   const buildingsContainerTop = getBuildingsContainerTop();
   console.log("buildingsContainerTop", buildingsContainerTop);
 
-  let maxHeight: number = 0;
-  // console.log("maxHeight", maxHeight + buildingsContainerTop);
-  const buildingsList: Building[] = [];
-  // console.log("maxHeight ", maxHeight);
   for (const { numFloors, numElevators } of buildings) {
     const building = new Building(numFloors);
-    buildingsList.push(building);
     const manager = new BuildingManager(building);
-
-    // building.elevatorsDivElement.style.minHeight = `${maxHeight}px`;
     container.appendChild(building.buildingDivElement);
 
     floorsFactory(manager, building, numFloors);
-    elevatorsFactory(manager, building, numElevators, numFloors);
-    const buildingHeight = building.getBuildingFirstFloorTop() as number;
-    maxHeight = buildingHeight ? buildingHeight > maxHeight : maxHeight;
+    let bottom = building.getBuildingFirstElementBottom("floor");
+    console.log("floor bottom:", bottom);
+
+    elevatorsFactory(manager, building, numElevators, bottom);
+    bottom = building.getBuildingFirstElementBottom("elevator");
+    console.log("elevator bottom:", bottom);
   }
 }
 
@@ -53,7 +49,6 @@ function floorsFactory(
     building.floorsDivElement.appendChild(floor.floorDiv);
   }
 }
-// }
 
 // Function to generate elevators
 function elevatorsFactory(
@@ -69,15 +64,6 @@ function elevatorsFactory(
   }
 }
 
-// const getMaxHeight = (buildings: BT[]) => {
-//   let maxHeight = 0;
-//   for (const { numFloors } of buildings) {
-//     if (numFloors && numFloors > maxHeight) {
-//       maxHeight = numFloors;
-//     }
-//   }
-//   return maxHeight;
-// };
 const getBuildingsContainerTop = () => {
   const element = document.getElementById("buildingsContainer");
   if (element) {
