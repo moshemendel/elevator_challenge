@@ -1,6 +1,6 @@
 .page-header{
   display: flex;
-  font-size:10ch;
+  font-size:100px;
   justify-content: center;
   font-style:italic;
 }
@@ -22,7 +22,7 @@
   padding-left: 5px;
 }
 
-.floors-area {
+.floors-div {
   padding-right: 5px;
 }
 
@@ -54,7 +54,7 @@
   linear-gradient(155deg, #d00 23px, transparent 23px);
   background-size: 58px 58px;
   background-position: 0px 2px, 4px 35px, 29px 31px, 34px 6px;
-  border-bottom: 1px solid black;
+  /* border-bottom: 1px solid black; */
   border-top: 7px solid black;
 }
 
