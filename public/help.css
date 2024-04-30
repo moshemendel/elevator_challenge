@@ -1,11 +1,10 @@
 
-
 .elv-div{
   width: 120px;
   position: relative;
 }
 
-.elevator{
+.elevator {
   position: absolute;
   width: 110px;
   height: 110px;

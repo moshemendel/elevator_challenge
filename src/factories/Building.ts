@@ -1,10 +1,8 @@
 import { Elevator } from "./Elevator";
 import { Floor } from "./Floor";
+import { Timer } from "../types";
 
-interface Timer {
-  sec: number;
-  ms: number;
-}
+
 
 export class Building {
   buildingDivElement: HTMLDivElement;
