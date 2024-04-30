@@ -1,17 +1,18 @@
 export class Elevator {
   elvDiv: HTMLDivElement;
   elvImg: HTMLImageElement;
-  isAvailable: boolean
-  atFloor: number = 0
+  isAvailable: boolean;
+  floorPixels: number = 118;
+  atFloor: number = 0;
 
   constructor(floorsCount: number) {
     this.elvDiv = this.createElevatorDiv();
-    this.elvImg = this.createElevatorImg(`${floorsCount * 118}px`);
+    this.elvImg = this.createElevatorImg(`${floorsCount * this.floorPixels}px`);
     this.isAvailable = true;
   }
 
   setAvailable(): void {
-    this.isAvailable = !this.isAvailable
+    this.isAvailable = !this.isAvailable;
   }
 
   createElevatorDiv(): HTMLDivElement {
@@ -22,10 +23,10 @@ export class Elevator {
 
   createElevatorImg(height: string): HTMLImageElement {
     const img = document.createElement("img");
-    img.src ='elv.png'
+    img.src = "elv.png";
     img.alt = "Elevator";
     img.classList.add("elevator");
-    img.style.top = height
+    img.style.top = height;
     this.elvDiv.appendChild(img);
     return img;
   }

@@ -1,8 +1,6 @@
 import { Elevator } from "./Elevator";
 import { Floor } from "./Floor";
-import { Timer } from "../types";
-
-
+import { Timer } from "../utils/types";
 
 export class Building {
   buildingDivElement: HTMLDivElement;
@@ -13,12 +11,13 @@ export class Building {
   requestStack: Floor[] = [];
   reqInProgress: boolean = false;
   dingSound: string = "ding.mp3";
+  floorPixels: number = 118;
 
   constructor(numFloors: number, numElevators: number) {
     this.buildingDivElement = this.createBuildingDiv();
     this.floorsDivElement = this.createFloorsDiv();
     this.elevatorsDivElement = this.createElevatorsDiv();
-    this.buildingHeight = numFloors * 118;
+    this.buildingHeight = numFloors * this.floorPixels;
     this.stackManager();
   }
 
@@ -82,30 +81,20 @@ export class Building {
   updateElvPos = (floor: Floor, elevator: Elevator, time: number) => {
     const floorPos = floor.floorDiv.offsetTop;
     let elevatorPos = elevator.elvImg.offsetTop;
-    // let { sec, ms } = this.convertTime(time);
-    time = Math.ceil(time)
-    floor.timerDiv.textContent = `${time.toString().padStart(2, "0")}`
+    time = Math.ceil(time);
+    floor.timerDiv.textContent = `${time.toString().padStart(2, "0")}`;
     const timerId = setInterval(() => {
-      time--
-      // ms--;
-      // if (ms === 0) {
-      //   sec--;
-      //   ms = 60;
-      // }
-      // const formattedSec = sec.toString().padStart(2, "0");
-      // const formattedMs = ms.toString().padStart(2, "0").slice(0, 2);
-      // floor.timerDiv.textContent = `${formattedSec}:${formattedMs}`;
-      floor.timerDiv.textContent = `${time.toString().padStart(2, "0")}`
+      time--;
+      floor.timerDiv.textContent = `${time.toString().padStart(2, "0")}`;
     }, 1400);
     const id = setInterval(() => {
       if (floorPos === elevatorPos) {
         clearInterval(id);
-        // floor.timerDiv.textContent = `00:00`
         clearInterval(timerId);
         this.playSound();
         elevator.atFloor = floor.floorNumber;
         this.updateFloorBtn(floor);
-        floor.timerDiv.textContent = '00'
+        floor.timerDiv.textContent = "00";
         setTimeout(() => {
           elevator.setAvailable();
         }, 2000);
@@ -113,8 +102,8 @@ export class Building {
         if (elevatorPos > floorPos) {
           elevatorPos--;
         } else {
-          elevatorPos++
-        };
+          elevatorPos++;
+        }
         elevator.elvImg.style.top = `${elevatorPos}px`;
       }
     }, 4); // this interval will move the elvator at time of one second between two floors

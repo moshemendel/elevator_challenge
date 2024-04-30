@@ -1,27 +1,26 @@
-import { Building } from "./Building";
-import { Floor } from "./Floor";
-import { Elevator } from "./Elevator";
-import { Building as BT} from "../types";
-
+import { Building } from "./components/Building";
+import { Floor } from "./components/Floor";
+import { Elevator } from "./components/Elevator";
+import { BuildingInstructions as BT } from "./utils/types";
 
 // Function to generate buildings
 export function buildingsFactory(buildings: BT[]) {
   console.log("buildingsFactory", buildings);
   const container = document.getElementById(
-    "container"
+    "buildingsContainer"
   ) as HTMLDivElement | null;
   if (!container) {
     return;
   }
 
-  const maxHeight = getMaxHeight(buildings)*118;
-  console.log("maxHeight ",maxHeight)
+  const maxHeight = getMaxHeight(buildings) * 118;
+  console.log("maxHeight ", maxHeight);
   for (const { numFloors, numElevators } of buildings) {
     const building = new Building(numFloors, numElevators);
-    building.buildingDivElement.style.minHeight = `${maxHeight}px`
+    building.buildingDivElement.style.minHeight = `${maxHeight}px`;
     container.appendChild(building.buildingDivElement);
-    floorsFactory(building, numFloors); // Generate 10 floors for each building
-    elevatorFactory(building, numElevators, numFloors); // Generate 2 elevators for each building
+    floorsFactory(building, numFloors);
+    elevatorsFactory(building, numElevators, numFloors);
   }
 }
 
@@ -35,13 +34,12 @@ function floorsFactory(building: Building, numFloors: number) {
         building.handleClick(floor);
       });
     }
-    // building.floors.push(floor);
     building.floorsDivElement.appendChild(floor.floorDiv);
   }
 }
 
 // Function to generate elevators
-function elevatorFactory(
+function elevatorsFactory(
   building: Building,
   numElevators: number,
   numFloors: number
