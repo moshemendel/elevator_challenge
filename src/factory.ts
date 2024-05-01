@@ -1,10 +1,18 @@
+/**
+ * Factory functions to generate buildings, floors, and elevators.
+ * @module
+ */
+
 import { Building } from "./components/Building";
 import { Floor } from "./components/Floor";
 import { Elevator } from "./components/Elevator";
 import { BuildingManager } from "./BuildingManager";
 import { BuildingInstructions as BT } from "./utils/types";
 
-// Function to generate buildings
+/**
+ * Generates buildings based on the provided configuration.
+ * @param {BT[]} buildings - Array of building configurations.
+ */
 export function buildingsFactory(buildings: BT[]) {
   console.log("buildingsFactory", buildings);
   const container = document.getElementById(
@@ -25,21 +33,29 @@ export function buildingsFactory(buildings: BT[]) {
   }
 }
 
-// Function to generate floors
-function floorsFactory(manager: BuildingManager, building: Building) {
+/**
+ * Generates floors for a building.
+ * @param {BuildingManager} manager - The building manager instance.
+ * @param {Building} building - The building instance.
+ */ function floorsFactory(manager: BuildingManager, building: Building) {
   for (let floorNum = building.numFloors; floorNum >= 0; floorNum--) {
     const floor = new Floor(floorNum);
-    const { floorBtn } = floor;
+    const { floorBtn, floorDiv } = floor;
+    // add event listener to floor button and connect it to the manager handler
     floorBtn?.addEventListener("click", () => {
       manager.handleClick(floor);
     });
-    // building.floorsDivElement.appendChild
-    building.addFloor(floor.floorDiv);
+    building.addFloor(floorDiv);
   }
 }
 
-// Function to generate elevators
-function elevatorsFactory(
+/**
+ * Generates elevators for a building.
+ * @param {BuildingManager} manager - The building manager instance.
+ * @param {Building} building - The building instance.
+ * @param {number} numElevators - The number of elevators to generate.
+ * @param {number} elvTop - The top position for the elevators.
+ */ function elevatorsFactory(
   manager: BuildingManager,
   building: Building,
   numElevators: number,

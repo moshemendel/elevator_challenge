@@ -2,8 +2,7 @@ import { buildingsFactory } from "./factory";
 import { BuildingInstructions as BT } from "./utils/types";
 
 /**
- * An asynchronous function that loads building instructions from a JSON file with the specified format:
- * {
+ * Asynchronously loads building instructions from a JSON file and generates buildings based on the instructions. * {
  *   "buildings":[{
  *       "numFloors":15,
  *       "numElevators":3
@@ -33,7 +32,6 @@ async function loadBuildingInstructions(): Promise<Array<BT> | null> {
  */
 document.addEventListener("DOMContentLoaded", function () {
   loadBuildingInstructions().then((instruction) => {
-    console.log(instruction);
     if (instruction) {
       buildingsFactory(instruction);
     }
