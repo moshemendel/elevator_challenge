@@ -5,12 +5,12 @@
   font-style:italic;
 }
 
-.elv-div{
+.elevator{
   width: 120px;
   /* position: absolute; */
 }
 
-.elevator {
+.elevator-img {
   position:absolute;
   /* bottom:24%; */
   width: 110px;
@@ -28,7 +28,7 @@
   padding-right: 5px;
 }
 
-.elv-area {
+.elvs-div {
   display: flex;
   padding-right: 5px;
 }

@@ -1,18 +1,17 @@
-export class Elevator {
+import { BuildingComponent } from "./absBuilding";
+
+export class Elevator extends BuildingComponent {
   elvDiv: HTMLDivElement;
   elvImg: HTMLImageElement;
   isAvailable: boolean;
   floorPixels: number = 116;
   atFloor: number = 0;
 
-  constructor(floorsCount: number) {
-    this.elvDiv = this.createElevatorDiv();
-    this.elvImg = this.createElevatorImg(`${floorsCount - this.floorPixels}px`);
+  constructor(top: number) {
+    super();
+    this.elvDiv = this.createParentElement("elevator");
+    this.elvImg = this.createChildElement(`${top - this.floorPixels}px`);
     this.isAvailable = true;
-  }
-
-  setAvailable(): void {
-    this.isAvailable = !this.isAvailable;
   }
 
   createElevatorDiv(): HTMLDivElement {
@@ -21,13 +20,18 @@ export class Elevator {
     return div;
   }
 
-  createElevatorImg(height: string): HTMLImageElement {
+  createChildElement(top: string): HTMLImageElement {
     const img = document.createElement("img");
+    img.classList.add("elevator-img");
     img.src = "elv.png";
     img.alt = "Elevator";
-    img.classList.add("elevator");
-    img.style.top = height;
+    img.style.top = top;
     this.elvDiv.appendChild(img);
     return img;
   }
+
+  getElvTop = () => this.elvImg.offsetTop;
+  setAvailable = () => (this.isAvailable = !this.isAvailable);
+  setTopPosition = (top: number) => (this.elvImg.style.top = `${top}px`);
+  setFloor = (floor: number) => (this.atFloor = floor);
 }

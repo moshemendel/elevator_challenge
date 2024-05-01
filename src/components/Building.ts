@@ -1,43 +1,38 @@
-export class Building {
-  buildingDivElement: HTMLDivElement;
-  floorsDivElement: HTMLDivElement;
-  elevatorsDivElement: HTMLDivElement;
-  floorPixels: number = 118;
+import { BuildingComponent } from "./absBuilding";
+
+export class Building extends BuildingComponent {
+  buildingDiv: HTMLDivElement;
+  floorsDiv: HTMLDivElement;
+  elevatorsDiv: HTMLDivElement;
   buildingHeight: number;
+  floorPixels: number = 116;
+  numFloors: number = 0;
+
   constructor(numFloors: number) {
-    this.buildingDivElement = this.createBuildingDiv();
-    this.floorsDivElement = this.createFloorsDiv();
-    this.elevatorsDivElement = this.createElevatorsDiv();
-    this.buildingHeight = numFloors * 118;
+    super();
+    this.numFloors = numFloors;
+    this.buildingDiv = this.createParentElement("building");
+    this.floorsDiv = this.createChildElement("floors-div");
+    this.elevatorsDiv = this.createChildElement("elvs-div");
+    this.buildingHeight = numFloors * this.floorPixels;
   }
 
-  createBuildingDiv = (): HTMLDivElement => {
-    const div = document.createElement("div");
-    div.classList.add("building");
+  createChildElement = (className: string) => {
+    const div = this.createParentElement(className);
+    this.buildingDiv.appendChild(div);
     return div;
   };
 
-  createFloorsDiv(): HTMLDivElement {
-    const div = document.createElement("div");
-    div.classList.add("floors-div");
-    this.buildingDivElement.appendChild(div);
-    return div;
-  }
-
-  createElevatorsDiv(): HTMLDivElement {
-    const div = document.createElement("div");
-    div.classList.add("elv-area");
-    this.buildingDivElement.appendChild(div);
-    return div;
-  }
-
   getBuildingFirstElementBottom(element: string): number {
-    let Top: number = 0;
+    let top: number = 0;
     const elements = document.getElementsByClassName(element);
     if (elements.length > 0) {
       const lastElement = elements[elements.length - 1];
-      Top = Math.floor(lastElement.getBoundingClientRect().bottom);
+      top = Math.floor(lastElement.getBoundingClientRect().bottom);
     }
-    return Top;
+    return top;
   }
+
+  addElevator = (elevator: Element) => this.elevatorsDiv.appendChild(elevator);
+  addFloor = (floor: Element) => this.floorsDiv.appendChild(floor);
 }

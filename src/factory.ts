@@ -14,39 +14,27 @@ export function buildingsFactory(buildings: BT[]) {
     return;
   }
 
-  const buildingsContainerTop = getBuildingsContainerTop();
-  console.log("buildingsContainerTop", buildingsContainerTop);
-
   for (const { numFloors, numElevators } of buildings) {
     const building = new Building(numFloors);
     const manager = new BuildingManager(building);
-    container.appendChild(building.buildingDivElement);
+    container.appendChild(building.buildingDiv);
 
-    floorsFactory(manager, building, numFloors);
-    let bottom = building.getBuildingFirstElementBottom("floor");
-    console.log("floor bottom:", bottom);
-
-    elevatorsFactory(manager, building, numElevators, bottom);
-    bottom = building.getBuildingFirstElementBottom("elevator");
-    console.log("elevator bottom:", bottom);
+    floorsFactory(manager, building);
+    let elvTop = building.getBuildingFirstElementBottom("floor");
+    elevatorsFactory(manager, building, numElevators, elvTop);
   }
 }
 
 // Function to generate floors
-function floorsFactory(
-  manager: BuildingManager,
-  building: Building,
-  numFloors: number
-) {
-  for (let i = numFloors; i >= 0; i--) {
-    const floor = new Floor(i);
+function floorsFactory(manager: BuildingManager, building: Building) {
+  for (let floorNum = building.numFloors; floorNum >= 0; floorNum--) {
+    const floor = new Floor(floorNum);
     const { floorBtn } = floor;
-    if (floorBtn) {
-      floorBtn.addEventListener("click", () => {
-        manager.handleClick(floor);
-      });
-    }
-    building.floorsDivElement.appendChild(floor.floorDiv);
+    floorBtn?.addEventListener("click", () => {
+      manager.handleClick(floor);
+    });
+    // building.floorsDivElement.appendChild
+    building.addFloor(floor.floorDiv);
   }
 }
 
@@ -55,19 +43,11 @@ function elevatorsFactory(
   manager: BuildingManager,
   building: Building,
   numElevators: number,
-  numFloors: number
+  elvTop: number
 ) {
   for (let i = 1; i <= numElevators; i++) {
-    const elevator = new Elevator(numFloors);
-    building.elevatorsDivElement.appendChild(elevator.elvDiv);
+    const elevator = new Elevator(elvTop);
+    building.addElevator(elevator.elvDiv);
     manager.elevators.push(elevator);
   }
 }
-
-const getBuildingsContainerTop = () => {
-  const element = document.getElementById("buildingsContainer");
-  if (element) {
-    return Math.floor(element.getBoundingClientRect().y);
-  }
-  return 0;
-};

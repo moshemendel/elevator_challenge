@@ -1,23 +1,22 @@
 import { Building } from "./components/Building";
 import { Floor } from "./components/Floor";
 import { Elevator } from "./components/Elevator";
-import { Timer } from "./utils/types";
 
 export class BuildingManager {
-  buildings: Building;
+  building: Building;
   elevators: Elevator[] = [];
   requestStack: Floor[] = [];
   reqInProgress: boolean = false;
   dingSound: string = "ding.mp3";
 
   constructor(building: Building) {
-    this.buildings = building;
+    this.building = building;
     this.stackManager();
   }
 
   handleClick = (floor: Floor) => {
     if (!floor.isPressed) {
-      this.updateFloorBtn(floor);
+      floor.updateFloorBtn();
       this.requestStack.push(floor);
     }
   };
@@ -36,61 +35,52 @@ export class BuildingManager {
   };
 
   processRequest = (floor: Floor) => {
-    const elvNum = this.getClosestElv(floor.floorDiv.offsetTop);
-    const elevator = this.elevators[elvNum];
+    const elevator = this.getClosestElv(floor.floorDiv.offsetTop);
     elevator.setAvailable();
-    const time = Math.abs(floor.floorNumber - elevator.atFloor) / 2;
-    console.log(`timer for elevator to arrive: ${time} seconds`);
-    this.updateElvPos(floor, elevator, time);
-  };
-  updateFloorBtn = (floor: Floor) => {
-    floor.floorBtn.classList.toggle("clicked");
-    floor.isPressed = !floor.isPressed;
+    const countdown = Math.abs(floor.floorNumber - elevator.atFloor) / 2;
+    console.log(`timer for elevator to arrive: ${countdown} seconds`);
+    floor.timer.setCountdown(countdown);
+    this.updateElvPos(floor, elevator);
   };
 
-  getClosestElv = (pos: number) => {
+  getClosestElv = (floorTop: number) => {
     let closestElv: number = 0;
-    let minDist = this.buildings.buildingHeight + 100;
+    // the maximum distance between a floor and a elevator is for the last floor and the elevator in 1st floor
+    let minDist = this.building.buildingHeight + this.building.floorPixels;
     for (let i = 0; i < this.elevators.length; i++) {
-      if (this.elevators[i].isAvailable) {
-        const _dist = Math.abs(this.elevators[i].elvImg.offsetTop - pos);
-        if (_dist < minDist) {
-          minDist = _dist;
+      const elevator = this.elevators[i];
+      if (elevator.isAvailable) {
+        const dist = Math.abs(elevator.elvImg.offsetTop - floorTop);
+        if (dist < minDist) {
+          minDist = dist;
           closestElv = i;
         }
       }
     }
-    return closestElv;
+    return this.elevators[closestElv];
   };
 
-  updateElvPos = (floor: Floor, elevator: Elevator, time: number) => {
-    const floorPos = floor.floorDiv.offsetTop;
-    let elevatorPos = elevator.elvImg.offsetTop;
-    time = Math.floor(time);
-    floor.timerDiv.textContent = `${time.toString().padStart(2, "0")}`;
-    const timerId = setInterval(() => {
-      time--;
-      floor.timerDiv.textContent = `${time.toString().padStart(2, "0")}`;
-    }, 1000);
+  updateElvPos = (floor: Floor, elevator: Elevator) => {
+    const floorTop = floor.getFloorTop();
+    let elvTop = elevator.getElvTop();
+
     const id = setInterval(() => {
-      console.log("floorTop:", floorPos, "elevatorTop:", elevatorPos);
-      if (floorPos === elevatorPos) {
+      if (floorTop === elvTop) {
         clearInterval(id);
-        clearInterval(timerId);
+        floor.timer.stopCountdown();
         this.playSound();
-        elevator.atFloor = floor.floorNumber;
-        this.updateFloorBtn(floor);
-        floor.timerDiv.textContent = "00";
+        elevator.setFloor(floor.floorNumber);
+        floor.updateFloorBtn();
         setTimeout(() => {
           elevator.setAvailable();
         }, 2000);
       } else {
-        if (elevatorPos > floorPos) {
-          elevatorPos--;
+        if (elvTop > floorTop) {
+          elvTop--;
         } else {
-          elevatorPos++;
+          elvTop++;
         }
-        elevator.elvImg.style.top = `${elevatorPos}px`;
+        elevator.setTopPosition(elvTop);
       }
     }, 4); // this interval will move the elvator at time of one second between two floors
   };
