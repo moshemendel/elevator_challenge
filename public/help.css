@@ -6,13 +6,11 @@
 }
 
 .elevator{
-  width: 120px;
-  /* position: absolute; */
+  width: 110px;
 }
 
 .elevator-img {
   position:absolute;
-  /* bottom:24%; */
   width: 110px;
   height: 110px;
 }

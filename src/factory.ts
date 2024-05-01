@@ -20,7 +20,7 @@ export function buildingsFactory(buildings: BT[]) {
     container.appendChild(building.buildingDiv);
 
     floorsFactory(manager, building);
-    let elvTop = building.getBuildingFirstElementBottom("floor");
+    let elvTop = building.getElevatorTopPos("floor");
     elevatorsFactory(manager, building, numElevators, elvTop);
   }
 }

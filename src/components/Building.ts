@@ -23,7 +23,7 @@ export class Building extends BuildingComponent {
     return div;
   };
 
-  getBuildingFirstElementBottom(element: string): number {
+  getElevatorTopPos(element: string): number {
     let top: number = 0;
     const elements = document.getElementsByClassName(element);
     if (elements.length > 0) {
