@@ -14,6 +14,7 @@ export class Building extends BuildingComponent {
    * @property {numFloors}: The number of floors in the building.
    * 
    */
+  
   buildingDiv: HTMLDivElement;
   floorsDiv: HTMLDivElement;
   elevatorsDiv: HTMLDivElement;
@@ -49,11 +50,12 @@ export class Building extends BuildingComponent {
    * @param {string} element - The class name of the elements to search.
    * @returns {number} The top position in pixels.
    */
-  getElevatorTopPos(element: string): number {
+  getElevatorTopPos(): number {
     let top: number = 0;
-    const elements = document.getElementsByClassName(element);
+    const elements = document.getElementsByClassName("floor");
     if (elements.length > 0) {
       const lastElement = elements[elements.length - 1];
+      console.log(lastElement.getBoundingClientRect())
       top = Math.floor(lastElement.getBoundingClientRect().bottom);
     }
     return top;

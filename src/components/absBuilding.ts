@@ -13,6 +13,7 @@ export abstract class BuildingComponent {
     div.classList.add(className);
     return div;
   };
+  
   /**
    * Abstract method to be implemented by subclasses for creating child elements.
    * @abstract

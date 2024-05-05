@@ -21,14 +21,24 @@ export function buildingsFactory(buildings: BT[]) {
   if (!container) {
     return;
   }
-
+  const buildingsManagers: BuildingManager[] = [];
   for (const { numFloors, numElevators } of buildings) {
+    console.log(
+      "Building: numFloors: " + numFloors,
+      "num elevator" + numElevators
+    );
     const building = new Building(numFloors);
-    const manager = new BuildingManager(building);
+    const manager = new BuildingManager(building, numElevators);
     container.appendChild(building.buildingDiv);
 
     floorsFactory(manager, building);
-    let elvTop = building.getElevatorTopPos("floor");
+    buildingsManagers.push(manager);
+  }
+
+  for (const manager of buildingsManagers) {
+    const { building, numElevators } = manager;
+    let elvTop = building.getElevatorTopPos();
+    console.log("elvTop position", elvTop);
     elevatorsFactory(manager, building, numElevators, elvTop);
   }
 }

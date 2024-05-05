@@ -10,12 +10,14 @@ export class BuildingManager {
   /**
    * @property {building}: The building associated with the manager.
    * @property {elevators}: Array of elevators managed by the building manager.
+   * @property {numElevators}: Number of elevators.
    * @property {requestStack}: Stack of floor requests to be processed by the elevators.
    * @property {isReqInProgress}: Flag indicating if a request is currently in progress.
    * @property {dingSound}: The sound file to play when an elevator reaches a floor.
    */
   building: Building;
   elevators: Elevator[] = [];
+  numElevators: number
   requestStack: Floor[] = [];
   isReqInProgress: boolean = false;
   dingSound: string = "ding.mp3";
@@ -25,8 +27,9 @@ export class BuildingManager {
    * @constructor
    * @param {Building} building - The building to manage.
    */
-  constructor(building: Building) {
+  constructor(building: Building, numElevators: number) {
     this.building = building;
+    this.numElevators = numElevators
     this.stackManager();
   }
 
@@ -35,7 +38,7 @@ export class BuildingManager {
    * @param {Floor} floor - The floor associated with the clicked button.
    */
   handleClick = (floor: Floor) => {
-    if (!floor.isPressed) {
+    if (!floor.isPressed && !floor.isOccupied) {
       floor.updateFloorBtn();
       this.requestStack.push(floor);
     }
