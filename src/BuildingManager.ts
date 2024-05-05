@@ -17,7 +17,7 @@ export class BuildingManager {
    */
   building: Building;
   elevators: Elevator[] = [];
-  numElevators: number
+  numElevators: number;
   requestStack: Floor[] = [];
   isReqInProgress: boolean = false;
   dingSound: string = "ding.mp3";
@@ -29,7 +29,7 @@ export class BuildingManager {
    */
   constructor(building: Building, numElevators: number) {
     this.building = building;
-    this.numElevators = numElevators
+    this.numElevators = numElevators;
     this.stackManager();
   }
 
@@ -38,10 +38,25 @@ export class BuildingManager {
    * @param {Floor} floor - The floor associated with the clicked button.
    */
   handleClick = (floor: Floor) => {
-    if (!floor.isPressed && !floor.isOccupied) {
+    if (!floor.isPressed && !this.isElvAtFloor(floor.floorNumber)) {
+      // this.isFloorOccupied()
       floor.updateFloorBtn();
       this.requestStack.push(floor);
     }
+  };
+
+   /**
+   * check if elevator is already at floor so that it can't call another elveator
+   * @param {number} floorNumber - The floor number associated with the clicked button.
+   * @returns {boolean} True if there is elevator at floor, false otherwise.
+   */
+  isElvAtFloor = (floorNumber: number): boolean => {
+    for (const { atFloor } of this.elevators) {
+      if (floorNumber === atFloor) {
+        return true;
+      }
+    }
+    return false;
   };
 
   /**

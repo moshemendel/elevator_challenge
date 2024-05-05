@@ -13,14 +13,12 @@ export class Floor extends BuildingComponent {
    * @property {floorBtn}: The button element for the floor.
    * @property {timer}: The timer associated with the floor.
    * @property {isPressed}: Flag indicating if the floor button is pressed.
-   * @property {isOccupied}: Flag indicating if the floor is occupied with elevator.
    */
   floorNumber: number;
   floorDiv: HTMLDivElement;
   floorBtn: HTMLButtonElement;
   timer: Timer;
   private _isPressed: boolean = false;
-  private _isOccupied: boolean = false;
 
   /**
    * Creates a new Floor instance.
@@ -75,7 +73,6 @@ export class Floor extends BuildingComponent {
   updateFloorBtn = () => {
     this.floorBtn.classList.toggle("clicked");
     this._isPressed = !this.isPressed;
-    // this._isOccupied = !this._isOccupied;
     this.timer.setTimer(0);
   };
 
@@ -93,11 +90,4 @@ export class Floor extends BuildingComponent {
     return this._isPressed;
   }
 
-  /**
-   * Returns a boolean value indicating whether the floor is currently occupied with an elevator.
-   * @returns {boolean} - True if the floor is occupied with an elevator, false otherwise.
-   */
-  get isOccupied(): boolean {
-    return this._isOccupied;
-  }
 }
