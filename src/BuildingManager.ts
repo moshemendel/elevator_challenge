@@ -82,6 +82,7 @@ export class BuildingManager {
   processRequest = (floor: Floor) => {
     const elevator = this.getClosestElv(floor.top);
     elevator.isAvailable = false;
+    elevator.freeFloor();
     const countdown = Math.abs(floor.number - elevator.floor) / 2;
     console.log(`timer for elevator to arrive: ${countdown} seconds`);
     floor.timer.setCountdown(countdown);

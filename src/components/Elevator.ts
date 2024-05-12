@@ -98,4 +98,12 @@ export class Elevator extends BuildingComponent {
   get isAvailable(): boolean {
     return this._isAvailable;
   }
+
+  /**
+   * Sets the current floor to -1, indicating that the elevator is not at any specific floor.
+   * the purpose of this method is to free the elevator from floor so the floor can call another elevator
+   */
+  freeFloor(): void {
+    this._atFloor = -1;
+  }
 }
