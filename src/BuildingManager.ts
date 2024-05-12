@@ -38,9 +38,9 @@ export class BuildingManager {
    * @param {Floor} floor - The floor associated with the clicked button.
    */
   handleClick = (floor: Floor) => {
-    if (!floor.isPressed && !this.isElvAtFloor(floor.floorNumber)) {
+    if (!floor.isPressed && !this.isElvAtFloor(floor.number)) {
       // this.isFloorOccupied()
-      floor.updateFloorBtn();
+      floor.updateBtn();
       this.requestStack.push(floor);
     }
   };
@@ -51,8 +51,8 @@ export class BuildingManager {
    * @returns {boolean} True if there is elevator at floor, false otherwise.
    */
   isElvAtFloor = (floorNumber: number): boolean => {
-    for (const { atFloor } of this.elevators) {
-      if (floorNumber === atFloor) {
+    for (const elevator of this.elevators) {
+      if (floorNumber === elevator.floor) {
         return true;
       }
     }
@@ -69,7 +69,7 @@ export class BuildingManager {
         this.elevators.some((elevator) => elevator.isAvailable)
       ) {
         const floor = this.requestStack.shift() as Floor;
-        console.log(`Request stack: handling floor ${floor.floorNumber}`);
+        console.log(`Request stack: handling floor ${floor.number}`);
         this.processRequest(floor);
       }
     }, 10);
@@ -80,9 +80,9 @@ export class BuildingManager {
    * @param {Floor} floor - The floor associated with the request.
    */
   processRequest = (floor: Floor) => {
-    const elevator = this.getClosestElv(floor.floorDiv.offsetTop);
-    elevator.setAvailable();
-    const countdown = Math.abs(floor.floorNumber - elevator.atFloor) / 2;
+    const elevator = this.getClosestElv(floor.top);
+    elevator.isAvailable = false;
+    const countdown = Math.abs(floor.number - elevator.floor) / 2;
     console.log(`timer for elevator to arrive: ${countdown} seconds`);
     floor.timer.setCountdown(countdown);
     this.updateElvPos(floor, elevator);
@@ -95,11 +95,11 @@ export class BuildingManager {
    */
   getClosestElv = (floorTop: number): Elevator => {
     let closestElv: number = 0;
-    let minDist = this.building.buildingHeight // + this.building.floorPixels;
+    let minDist = this.building.height; // + this.building.floorPixels;
     for (let i = 0; i < this.elevators.length; i++) {
       const elevator = this.elevators[i];
       if (elevator.isAvailable) {
-        const dist = Math.abs(elevator.elvImg.offsetTop - floorTop);
+        const dist = Math.abs(elevator.top - floorTop);
         if (dist < minDist) {
           minDist = dist;
           closestElv = i;
@@ -115,18 +115,18 @@ export class BuildingManager {
    * @param {Elevator} elevator - The elevator to move.
    */
   updateElvPos = (floor: Floor, elevator: Elevator) => {
-    const floorTop = floor.getFloorTop();
-    let elvTop = elevator.getElvTop();
+    const floorTop = floor.top;
+    let elvTop = elevator.top;
 
     const id = setInterval(() => {
       if (floorTop === elvTop) {
         clearInterval(id);
         floor.timer.stopCountdown();
         this.playSound();
-        elevator.setFloor(floor.floorNumber);
-        floor.updateFloorBtn();
+        elevator.floor = floor.number;
+        floor.updateBtn();
         setTimeout(() => {
-          elevator.setAvailable();
+          elevator.isAvailable = true;
         }, 2000);
       } else {
         if (elvTop > floorTop) {
@@ -134,7 +134,7 @@ export class BuildingManager {
         } else {
           elvTop++;
         }
-        elevator.setTopPosition(elvTop);
+        elevator.top = elvTop;
       }
     }, 4);
   };

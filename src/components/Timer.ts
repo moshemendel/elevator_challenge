@@ -9,22 +9,22 @@ export class Timer {
    * @property {timerDiv}: The div element representing the timer.
    * @property {intervalId}: The ID of the interval for countdown updates.
    */
-  timerDiv: HTMLDivElement;
-  intervalId: NodeJS.Timeout | null = null;
+  private _timerDiv: HTMLDivElement;
+  private _intervalId: NodeJS.Timeout | null = null;
 
   /**
    * Creates a new Timer instance for a specific floor.
    * @constructor
    */
   constructor() {
-    this.timerDiv = this.createTimerDivElement();
+    this._timerDiv = this.createTimerDivElement();
   }
 
   /**
    * Creates the timer div element and appends it to the floor's div.
    * @returns {HTMLDivElement} The created timer element.
    */
-  createTimerDivElement = (): HTMLDivElement => {
+  private createTimerDivElement = (): HTMLDivElement => {
     const timer = document.createElement("div");
     timer.textContent = String("00");
     timer.classList.add("metal", "timer");
@@ -36,7 +36,7 @@ export class Timer {
    * @param {number} countdown - The countdown value to display.
    */
   setTimer(countdown: number) {
-    this.timerDiv.textContent = `${countdown.toString().padStart(2, "0")}`;
+    this._timerDiv.textContent = `${countdown.toString().padStart(2, "0")}`;
   }
 
   /**
@@ -46,7 +46,7 @@ export class Timer {
   setCountdown(countdown: number) {
     countdown = Math.floor(countdown);
     this.setTimer(countdown);
-    this.intervalId = setInterval(() => {
+    this._intervalId = setInterval(() => {
       countdown--;
       this.setTimer(countdown);
     }, 1000);
@@ -56,9 +56,9 @@ export class Timer {
    * Stops the countdown interval if it is active.
    */
   stopCountdown() {
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-      this.intervalId = null;
+    if (this._intervalId) {
+      clearInterval(this._intervalId);
+      this._intervalId = null;
     }
   }
 
@@ -67,6 +67,6 @@ export class Timer {
    * @returns {HTMLDivElement} The timer element.
    */
   get timer(): HTMLDivElement {
-    return this.timerDiv;
+    return this._timerDiv;
   }
 }

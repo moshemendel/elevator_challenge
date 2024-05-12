@@ -8,12 +8,17 @@ export abstract class BuildingComponent {
    * @param {string} className - The class name for the parent element.
    * @returns {HTMLElement} The created parent element.
    */
-  createParentElement = (className: string): HTMLDivElement => {
-    const div = document.createElement("div");
-    div.classList.add(className);
-    return div;
+  createElement = (tag: string, className: string | Array<string>): HTMLElement => {
+    const element = document.createElement(tag);
+    if (typeof className === "string") {
+      element.classList.add(className);
+    } else {
+      element.classList.add(...className);
+    }
+    return element;
   };
   
+
   /**
    * Abstract method to be implemented by subclasses for creating child elements.
    * @abstract

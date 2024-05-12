@@ -14,9 +14,9 @@ export class Floor extends BuildingComponent {
    * @property {timer}: The timer associated with the floor.
    * @property {isPressed}: Flag indicating if the floor button is pressed.
    */
-  floorNumber: number;
-  floorDiv: HTMLDivElement;
-  floorBtn: HTMLButtonElement;
+  private _number: number;
+  private _floor: HTMLElement;
+  private _button: HTMLElement;
   timer: Timer;
   private _isPressed: boolean = false;
 
@@ -27,38 +27,32 @@ export class Floor extends BuildingComponent {
    */
   constructor(floorNumber: number) {
     super();
-    this.floorNumber = floorNumber;
-    this.floorDiv = this.createParentElement("floor");
-    this.floorBtn = this.createChildElement();
+    this._number = floorNumber;
+    this._floor = this.createElement("div", "floor");
+    this._button = this.createChildElement();
     this.timer = this.addTimer();
   }
 
   /**
    * Creates the button element for the floor.
-   * @returns {HTMLButtonElement} The created button element.
+   * @returns {HTMLElement} The created button element.
    */
-  createChildElement = (): HTMLButtonElement => {
-    const button = document.createElement("button");
-    button.textContent = String(this.floorNumber);
-    button.classList.add("metal", "linear", "floor-btn");
-    this.floorDiv.appendChild(button);
+  createChildElement = (): HTMLElement => {
+    const classes = ["metal", "linear", "floor-btn"];
+    const button = this.createElement("button", classes);
+    button.textContent = `${this._number}`;
+    this.floor.appendChild(button);
     return button;
   };
 
   /**
    * Updates the floor button state and timer.
    */
-  updateFloorBtn = () => {
-    this.floorBtn.classList.toggle("clicked");
+  updateBtn = () => {
+    this._button.classList.toggle("clicked");
     this._isPressed = !this.isPressed;
     this.timer.setTimer(0);
   };
-
-  /**
-   * Gets the top position of the floor element.
-   * @returns {number} The top position of the floor.
-   */
-  getFloorTop = (): number => this.floorDiv.offsetTop;
 
   /**
    * create Timer using Timer Class. appand timer to floor div
@@ -66,7 +60,7 @@ export class Floor extends BuildingComponent {
    */
   addTimer(): Timer {
     const timer = new Timer();
-    this.floorDiv.appendChild(timer.timer);
+    this._floor.appendChild(timer.timer);
     return timer;
   }
 
@@ -77,7 +71,36 @@ export class Floor extends BuildingComponent {
   get isPressed(): boolean {
     return this._isPressed;
   }
+
+  /**
+   * Gets the top position of the floor element.
+   * @returns {number} The top position of the floor.
+   */
   get top(): number {
-    return this.floorDiv.offsetTop;
+    return this._floor.offsetTop;
+  }
+
+  /**
+   * This method returns the floor main div.
+   * @returns {HTMLElement} The floor element.
+   */
+  get floor(): HTMLElement {
+    return this._floor;
+  }
+
+  /**
+   * This method returns the floor button.
+   * @returns {HTMLElement} The button element for this floor.
+   */
+  get button(): HTMLElement {
+    return this._button;
+  }
+
+  /**
+   * This getter method returns the current value of the _number property.
+   * @returns {number} The floor number.
+   */
+  get number(): number {
+    return this._number;
   }
 }

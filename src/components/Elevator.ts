@@ -13,11 +13,11 @@ export class Elevator extends BuildingComponent {
    * @prop {floorPixels}: The height of each floor in pixels.
    * @prop {atFloor}: The current floor where the elevator is located.
    */
-  elvDiv: HTMLDivElement;
-  elvImg: HTMLImageElement;
-  isAvailable: boolean;
-  floorPixels: number = 116;
-  atFloor: number = 0;
+  private _elevator: HTMLElement;
+  private _img: HTMLImageElement;
+  private _isAvailable: boolean;
+  private _floorPixels: number = 116;
+  private _atFloor: number = 0;
 
   /**
    * Creates a new Elevator instance at the specified top position.
@@ -26,19 +26,9 @@ export class Elevator extends BuildingComponent {
    */
   constructor(top: number) {
     super();
-    this.elvDiv = this.createParentElement("elevator");
-    this.elvImg = this.createChildElement(`${top - this.floorPixels}px`);
-    this.isAvailable = true;
-  }
-
-  /**
-   * Creates the main div element for the elevator.
-   * @returns {HTMLDivElement} The created elevator div element.
-   */
-  createElevatorDiv(): HTMLDivElement {
-    const div = document.createElement("div");
-    div.classList.add("elv-div");
-    return div;
+    this._elevator = this.createElement("div", "elevator");
+    this._img = this.createChildElement(`${top - this._floorPixels}px`);
+    this._isAvailable = true;
   }
 
   /**
@@ -52,30 +42,60 @@ export class Elevator extends BuildingComponent {
     img.src = "elv.png";
     img.alt = "Elevator";
     img.style.top = top;
-    this.elvDiv.appendChild(img);
+    this._elevator.appendChild(img);
     return img;
   }
-
-  /**
-   * Gets the top position of the elevator cabin.
-   * @returns {number} The top position of the elevator cabin.
-   */
-  getElvTop = () => this.elvImg.offsetTop;
-
-  /**
-   * Toggles the availability status of the elevator.
-   */
-  setAvailable = () => (this.isAvailable = !this.isAvailable);
 
   /**
    * Sets the top position of the elevator cabin.
    * @param {number} top - The new top position in pixels.
    */
-  setTopPosition = (top: number) => (this.elvImg.style.top = `${top}px`);
+  set top(top: number) {
+    this._img.style.top = `${top}px`;
+  }
 
   /**
    * Sets the current floor where the elevator is located.
    * @param {number} floor - The floor number.
    */
-  setFloor = (floor: number) => (this.atFloor = floor);
+  set floor(floor: number) {
+    this._atFloor = floor;
+  }
+  /**
+   * This method returns the floor main div.
+   * @returns {HTMLDivElement} The floor element.
+   */
+  get elevator(): HTMLElement {
+    return this._elevator;
+  }
+  /**
+   * Sets the current floor where the elevator is located.
+   * @returns {number} floor - The floor number.
+   */
+  get floor(): number {
+    return this._atFloor;
+  }
+  /**
+   * Gets the top position of the elevator cabin.
+   * @returns {number} The top position of the elevator cabin.
+   */
+  get top(): number {
+    return this._img.offsetTop;
+  }
+
+  /**
+   * Sets the availability status of the elevator.
+   * @param {boolean} state - whether the elevator is available or not
+   */
+  set isAvailable(state: boolean) {
+    this._isAvailable = state;
+  }
+
+  /**
+   * This getter method returns the current availability state of the object as a boolean value.
+   * @returns {boolean} The availability state of the elevator.
+   */
+  get isAvailable(): boolean {
+    return this._isAvailable;
+  }
 }

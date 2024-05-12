@@ -29,7 +29,7 @@ export function buildingsFactory(buildings: BT[]) {
     );
     const building = new Building(numFloors);
     const manager = new BuildingManager(building, numElevators);
-    container.appendChild(building.buildingDiv);
+    container.appendChild(building.building);
 
     floorsFactory(manager, building);
     buildingsManagers.push(manager);
@@ -37,7 +37,7 @@ export function buildingsFactory(buildings: BT[]) {
 
   for (const manager of buildingsManagers) {
     const { building, numElevators } = manager;
-    let elvTop = building.getElevatorTopPos();
+    let elvTop = building.elevatorTopPos;
     console.log("elvTop position", elvTop);
     elevatorsFactory(manager, building, numElevators, elvTop);
   }
@@ -50,12 +50,11 @@ export function buildingsFactory(buildings: BT[]) {
  */ function floorsFactory(manager: BuildingManager, building: Building) {
   for (let floorNum = building.numFloors; floorNum >= 0; floorNum--) {
     const floor = new Floor(floorNum);
-    const { floorBtn, floorDiv } = floor;
     // add event listener to floor button and connect it to the manager handler
-    floorBtn?.addEventListener("click", () => {
+    floor.button?.addEventListener("click", () => {
       manager.handleClick(floor);
     });
-    building.addFloor(floorDiv);
+    building.addFloor(floor.floor);
   }
 }
 
@@ -73,7 +72,7 @@ export function buildingsFactory(buildings: BT[]) {
 ) {
   for (let i = 1; i <= numElevators; i++) {
     const elevator = new Elevator(elvTop);
-    building.addElevator(elevator.elvDiv);
+    building.addElevator(elevator.elevator);
     manager.elevators.push(elevator);
   }
 }
