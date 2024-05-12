@@ -45,7 +45,7 @@ export class BuildingManager {
     }
   };
 
-   /**
+  /**
    * check if elevator is already at floor so that it can't call another elveator
    * @param {number} floorNumber - The floor number associated with the clicked button.
    * @returns {boolean} True if there is elevator at floor, false otherwise.
@@ -93,9 +93,9 @@ export class BuildingManager {
    * @param {number} floorTop - The top position of the floor.
    * @returns {Elevator} The closest available elevator.
    */
-  getClosestElv = (floorTop: number) => {
+  getClosestElv = (floorTop: number): Elevator => {
     let closestElv: number = 0;
-    let minDist = this.building.buildingHeight + this.building.floorPixels;
+    let minDist = this.building.buildingHeight // + this.building.floorPixels;
     for (let i = 0; i < this.elevators.length; i++) {
       const elevator = this.elevators[i];
       if (elevator.isAvailable) {

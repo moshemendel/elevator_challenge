@@ -9,18 +9,18 @@ export class Building extends BuildingComponent {
    * @property {buildingDiv}: The main building container element.
    * @property {floorsDiv}: The container element for floors.
    * @property {elevatorsDiv}: The container element for elevators.
-   * @property {buildingHeight}: The total height of the building in pixels.
-   * @property {floorPixels}: The height of each floor in pixels.
    * @property {numFloors}: The number of floors in the building.
+   * @property {floorPixels}: The height of each floor in pixels.
+   * @property {buildingHeight}: The total height of the building in pixels.
    * 
    */
   
   buildingDiv: HTMLDivElement;
   floorsDiv: HTMLDivElement;
   elevatorsDiv: HTMLDivElement;
-  buildingHeight: number;
-  floorPixels: number = 116;
   numFloors: number = 0;
+  floorPixels: number = 116;
+  buildingHeight: number;
   /**
    * Creates a new Building instance.
    * @constructor
@@ -60,6 +60,7 @@ export class Building extends BuildingComponent {
     }
     return top;
   }
+  
   /**
    * Adds an elevator element to the elevators container.
    * @param {Element} elevator - The elevator element to add.

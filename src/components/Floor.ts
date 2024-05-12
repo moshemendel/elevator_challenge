@@ -30,18 +30,8 @@ export class Floor extends BuildingComponent {
     this.floorNumber = floorNumber;
     this.floorDiv = this.createParentElement("floor");
     this.floorBtn = this.createChildElement();
-    this.timer = new Timer(this);
+    this.timer = this.addTimer();
   }
-
-  /**
-   * Creates the main div element for the floor.
-   * @returns {HTMLDivElement} The created floor element.
-   */
-  createFloorElement = (): HTMLDivElement => {
-    const floor = document.createElement("div");
-    floor.classList.add("floor");
-    return floor;
-  };
 
   /**
    * Creates the button element for the floor.
@@ -53,18 +43,6 @@ export class Floor extends BuildingComponent {
     button.classList.add("metal", "linear", "floor-btn");
     this.floorDiv.appendChild(button);
     return button;
-  };
-
-  /**
-   * Creates the timer div element for the floor.
-   * @returns {HTMLDivElement} The created timer element.
-   */
-  createTimerDivElement = () => {
-    const timer = document.createElement("div");
-    timer.textContent = String("00");
-    timer.classList.add("metal", "timer");
-    this.floorDiv.appendChild(timer);
-    return timer;
   };
 
   /**
@@ -83,11 +61,23 @@ export class Floor extends BuildingComponent {
   getFloorTop = (): number => this.floorDiv.offsetTop;
 
   /**
+   * create Timer using Timer Class. appand timer to floor div
+   * @returns {Timer} Timer element.
+   */
+  addTimer(): Timer {
+    const timer = new Timer();
+    this.floorDiv.appendChild(timer.timer);
+    return timer;
+  }
+
+  /**
    * Returns a boolean value indicating whether the floor button is currently pressed.
    * @returns {boolean} - True if the floor button is pressed, false otherwise.
    */
   get isPressed(): boolean {
     return this._isPressed;
   }
-
+  get top(): number {
+    return this.floorDiv.offsetTop;
+  }
 }

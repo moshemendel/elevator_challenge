@@ -15,22 +15,19 @@ export class Timer {
   /**
    * Creates a new Timer instance for a specific floor.
    * @constructor
-   * @param {Floor} floor - The floor associated with the timer.
    */
-  constructor(floor: Floor) {
-    this.timerDiv = this.createTimerDivElement(floor);
+  constructor() {
+    this.timerDiv = this.createTimerDivElement();
   }
 
   /**
    * Creates the timer div element and appends it to the floor's div.
-   * @param {Floor} floor - The floor associated with the timer.
    * @returns {HTMLDivElement} The created timer element.
    */
-  createTimerDivElement = (floor: Floor) => {
+  createTimerDivElement = (): HTMLDivElement => {
     const timer = document.createElement("div");
     timer.textContent = String("00");
     timer.classList.add("metal", "timer");
-    floor.floorDiv.appendChild(timer);
     return timer;
   };
 
@@ -63,5 +60,13 @@ export class Timer {
       clearInterval(this.intervalId);
       this.intervalId = null;
     }
+  }
+
+  /**
+   * Gets the timer element.
+   * @returns {HTMLDivElement} The timer element.
+   */
+  get timer(): HTMLDivElement {
+    return this.timerDiv;
   }
 }
