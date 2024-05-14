@@ -22,12 +22,20 @@ export function buildingsFactory(buildings: BT[]) {
     return;
   }
   const buildingsManagers: BuildingManager[] = [];
-  for (const { numFloors, numElevators } of buildings) {
+  for (const { numFloors, numElevators, type } of buildings) {
     console.log(
+      "building type: " + type,
       "Building: numFloors: " + numFloors,
       "num elevator" + numElevators
     );
-    const building = new Building(numFloors);
+    let building: Building;
+    switch (type) {
+      case 1:
+        building = new Building(numFloors);
+        break;
+      default:
+        building = new Building(numFloors);
+    }
     const manager = new BuildingManager(building, numElevators);
     container.appendChild(building.building);
 
